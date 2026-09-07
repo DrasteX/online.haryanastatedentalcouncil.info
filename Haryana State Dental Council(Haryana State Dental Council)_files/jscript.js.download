@@ -1,0 +1,768 @@
+if ( window.history.replaceState) {
+        window.history.replaceState( null, null, window.location.href);
+}
+                      
+            $(document).ready(function () {
+                if($(window).width()<800){
+                  $('#sidebar').toggleClass('active');  
+                }
+                $('#content').on('click', function(){
+                    $('#Result').empty();
+                })
+                    //get_xboard('x_board');
+                    //get_xiiboard('xii_board');
+                    get_university_state('state_of_passing');
+                    //get_university_state('passing_state');
+                    get_university_state('state_of_passing_mds');
+                    get_country('India','country_of_passing');
+                    get_country('India','count_gd_name');
+                    $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                    });
+                    $("#MyModal").modal('show');
+                    $('#ChngPwd').modal('show');
+                       MyDataTable = $('#MyDataTable').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [ 'pageLength','copy', 'excel', 'pdf','csv','print', 'colvis' ],
+                        buttons: [
+				{
+                                extend: 'pageLength',
+                                className: 'btn-sm',
+                                
+                            },
+                            {
+                                extend: 'spacer',
+                                style: 'bar',                              
+                            },
+                            {
+                                extend: 'copy',
+                                text: "Copy",
+                                className: 'btn-info btn-sm',
+                                
+                            },
+                            {
+                                extend: 'spacer',
+                                style: 'bar',
+                              
+                            },
+                            {
+                                extend: 'pdf',
+                                text: "PDF",
+                                className: 'btn-danger btn-sm',
+                                
+                            },
+                            {
+                                extend: 'spacer',
+                                style: 'bar',
+                              
+                            },
+                            {
+                                extend: 'excel',
+                                text: "Excel",
+                                className: 'btn-success btn-sm'
+                            },
+                            {
+                                extend: 'spacer',
+                                style: 'bar',
+                              
+                            },
+                            {
+                                extend: 'csv',
+                                text: "Csv",
+                                className: 'btn-warning btn-sm'
+                            },
+                            {
+                                extend: 'spacer',
+                                style: 'bar',
+                              
+                            },
+                            {
+                                extend: 'print',
+                                text: "Print",
+                                className: 'btn-info btn-sm'
+                            },
+                            {
+                                extend: 'spacer',
+                                style: 'bar',
+                              
+                            },
+                            {
+                                extend: 'colvis',
+                                className: 'btn-success btn-sm'
+                            },
+                        ],
+                    });
+            //         $('#datetimepicker').datetimepicker();
+                    
+		    // if ( $('[type="date"]').prop('type') != 'date' ) {
+            //         $('[type="date"]').datetimepicker({format: 'YYYY-MM-DD'});
+            //         }
+		    // if ( $('[type="datetime"]').prop('type') != 'datetime' ) {
+            //         $('[type="datetime"]').datetimepicker({format: 'YYYY-MM-DD H:m:s'});
+            //         }
+            document.addEventListener("DOMContentLoaded", function () {
+
+    // Handle #datetimepicker id
+    const singlePicker = document.getElementById('datetimepicker');
+    if (singlePicker) {
+        new tempusDominus.TempusDominus(singlePicker, {
+            localization: {
+                format: 'yyyy-MM-dd HH:mm:ss'
+            }
+        });
+    }
+
+    // Handle all input[type="date"]
+    document.querySelectorAll('input[type="date"]').forEach(function (input) {
+
+        new tempusDominus.TempusDominus(input, {
+            localization: {
+                format: 'yyyy-MM-dd'
+            },
+            display: {
+                components: {
+                    clock: false
+                }
+            }
+        });
+
+    });
+
+    // Handle all input[type="datetime"]
+    document.querySelectorAll('input[type="datetime"]').forEach(function (input) {
+
+        new tempusDominus.TempusDominus(input, {
+            localization: {
+                format: 'yyyy-MM-dd HH:mm:ss'
+            },
+            display: {
+                components: {
+                    seconds: true
+                }
+            }
+        });
+
+    });
+
+});
+                 $('#login_password').on('blur', (function () {
+
+                    $('#user_name, #user_father_name, #user_email, #user_mobile, #user_dob, #user_password').change(function() {
+                        const field = $(this).attr('name');
+                        const value = $(this).val();
+                
+                        $.ajax({
+                            url: base_url+'validate_user_data',
+                            type: 'POST',
+                            data: { field: field, value: value, [csrf_token] : csrf_hash },
+                            success: function(response) {
+                              // alert(response);
+                                const result = JSON.parse(response);
+                
+                                if (result.status === 'error') {
+                                    showError(field, result.message);
+                
+                                    // Show SweetAlert for validation error
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Validation Error',
+                                        text: result.message,
+                                    });
+                                } else {
+                                    clearError(field);
+                                }
+                            }
+                        });
+                    });
+
+                var v_json = {x:window.btoa(unescape(encodeURIComponent($('#login_password').val()))),[csrf_token] : csrf_hash};   
+                        $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url:base_url+'encr_pwd',
+                                    data: v_json,
+                                    dataType: "HTML",
+                                    success:function(data){
+                                    $('#login_password').val(data);
+                                    }
+                                });            
+
+                        }));
+                        $('#user_name, #user_father_name, #user_email, #user_mobile, #user_dob, #user_password').change(function() {
+                            const field = $(this).attr('name');
+                            const value = $(this).val();
+                    		
+                            $.ajax({
+                                url: base_url+'validate_user_data',
+                                type: 'POST',
+                                data: { field: field, value: value, [csrf_token] : csrf_hash },
+                                success: function(response) {
+                                  // alert(response);
+                                    const result = JSON.parse(response);
+                    
+                                    if (result.status === 'error') {
+                                        showError(field, result.message);
+                    
+                                    } else {
+                                        clearError(field);
+                                    }
+                                }
+                            });
+                        });
+                        $('#confirm_user_password').blur(function() {
+                            const password = $('#user_password').val();
+                            const confirmPassword = $(this).val();
+                    
+                            if (password !== confirmPassword) {
+                                showError('confirm_user_password', 'Passwords do not match.');
+                    
+                                // Show SweetAlert for password mismatch
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Password Mismatch',
+                                    text: 'Passwords do not match.',
+                                });
+                            } else {
+                                clearError('confirm_user_password');
+                            }
+                        });
+                });
+                function showError(field, message) {
+                    const safeField = CSS.escape(field);
+                    const errorDivId = `${safeField}ErrorDiv`;
+                    let errorDiv = $(`#${errorDivId}`);
+                    if (errorDiv.length === 0) {
+                        // Create error div if it doesn't exist
+                        // errorDiv = $(`<div id="${errorDivId}" class="invalid-feedback" style="color:red;font-size:0.9em;margin-top:5px;">${message}</div>`);
+                        errorDiv = $(`<div id="${errorDivId}" class="is-invalid" style="color:red;font-size:0.9em;margin-top:5px;"></div>`).text(message);
+                        $(`[name="${safeField}"]`).after(errorDiv);
+                    } else {
+                        // Update the error message if div already exists
+                        errorDiv.text(message);
+                    }
+                    // Add invalid class to the field and clear its value
+                    //$(`[name="${field}"]`).addClass('is-invalid').val('');
+                }
+                function clearError(field) {
+                    const errorDivId = `${field}ErrorDiv`;
+                    $(`#${errorDivId}`).remove();
+                    $(`[name="${field}"]`).removeClass('is-invalid');
+                }
+                      function Sleep(time) {
+                          return new Promise((resolve) => setTimeout(resolve, time));
+                      }
+                function get_subtype(e,f){
+                var v_json = {list_type:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'ListSubType',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+                //$('#'+f).html(data);
+                 $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                
+                
+                function get_country(e,f){
+                var v_json = {country_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'Country',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+                function get_nationality(e,f){
+                var v_json = {country_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'Nationality',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+                function get_state(e,f){
+                var v_json = {country_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'CountryState',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+                function get_state_profile(e,f){
+                var v_json = {country_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'CountryStateProfile',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function get_district(e,f){
+                var v_json = {state_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'StateDistrict',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+                function get_district_profile(e,f){
+                var v_json = {state_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'StateDistrictProfile',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                
+                function get_city(e,f){
+                var v_json = {state_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'StateCity',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f);                
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function get_city_profile(e,f){
+                var v_json = {state_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'StateCityProfile',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f); 
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function get_role_entity(e,f){
+                var v_json = {role_id:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'RoleEntity',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeF = CSS.escape(f); 
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+               function get_alluniversities(g){
+                var v_json = {[csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetAllUniversities',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                const safeG = CSS.escape(g); 
+                //$('#'+g).html(data);
+                $('#' + safeG).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };                  
+                  
+                function get_university_state(e){
+                  var v_json = {[csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetUniversityState',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                    const safeE = CSS.escape(e); 
+                //$('#'+e).html(data);
+                $('#' + safeE).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                 
+                }
+                }); 
+                };
+                  
+                  
+                 function get_institutes(e){
+                  var v_json = {[csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetInstitutes',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                    const safeE = CSS.escape(e); 
+                //$('#'+e).html(data);
+                $('#' + safeE).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                 
+                }
+                }); 
+                };
+                  
+                  
+                function get_state_universities(e,f){
+               
+                  
+                  var v_json = {state_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetStateUniversity',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                    const safeF = CSS.escape(f); 
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+                function get_universitieses(e,f){
+                    var v_json = {appln_category:e, [csrf_token] : csrf_hash};
+                    $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url:base_url+'GetUniversityes',
+                    data: v_json,
+                    dataType: "HTML",
+                    success:function(data){
+                        const safeF = CSS.escape(f); 
+                    //$('#'+f).html(data);
+                    $('#' + safeF).html(
+                    data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+                );
+                    }
+                    }); 
+                    };
+                function get_collegeses(e,f){
+                  console.log('hhh');
+                    var v_json = {university_name:e, [csrf_token] : csrf_hash};
+                    $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url:base_url+'GetCollegees',
+                    data: v_json,
+                    dataType: "HTML",
+                    success:function(data){
+                        const safeF = CSS.escape(f); 
+                    //$('#'+f).html(data);
+                    $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+                );
+                    }
+                    }); 
+                    };
+                function get_universities(e,f){
+                var v_json = {state_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetUniversity',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                    const safeF = CSS.escape(f); 
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function get_colleges(e,f){
+                  var v_json = {university_name:e, [csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetCollege',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                    const safeF = CSS.escape(f); 
+               	//$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                
+                function get_nmc_list(f){
+                  var v_json = {[csrf_token] : csrf_hash};
+                $.ajax({
+                cache: false,
+                type: "POST",
+                url:base_url+'GetNMC',
+                data: v_json,
+                dataType: "HTML",
+                success:function(data){
+                    const safeF = CSS.escape(f); 
+                //$('#'+f).html(data);
+                $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+
+                function get_xboard(e,f){
+                    var v_json = {x_board:e, [csrf_token] : csrf_hash};
+                    $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url:base_url+'GetXBoard',
+                    data: v_json,
+                    dataType: "HTML",
+                    success:function(data){
+                        const safeF = CSS.escape(f); 
+                    //$('#'+f).html(data);
+                    $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function get_xiiboard(e,f){
+                    var v_json = {xii_board:e, [csrf_token] : csrf_hash};
+                    $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url:base_url+'GetXIIBoard',
+                    data: v_json,
+                    dataType: "HTML",
+                    success:function(data){
+                        const safeF = CSS.escape(f); 
+                    //$('#'+f).html(data);
+                    $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function get_qualifications(e,f){
+                    var v_json = {level:e, [csrf_token] : csrf_hash};
+                    $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url:base_url+'GetQualifications',
+                    data: v_json,
+                    dataType: "HTML",
+                    success:function(data){
+                        const safeF = CSS.escape(f); 
+                    //$('#'+f).html(data);
+                    $('#' + safeF).html(
+                data.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+            );
+                }
+                }); 
+                };
+                function upload_file(e){                   
+                var form_data = new FormData();              
+                form_data.append('_file', document.getElementById(e).files[0]);
+                form_data.append('form_data',$('#form_data_'+e).val);
+                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url:base_url+'UploadDocumetns',
+                                    data: form_data,
+                                    dataType: "text",
+                                    contentType: false,
+                                    processData: false,
+                                    success:function(data){
+                                    const resp = JSON.parse(data);
+                                    var result=window.atob(resp.result);
+                                    if(resp.status===true){
+                                        $('#'+e).attr('type', 'text');
+                                    }else{
+                                        //$('#upload_response').html(result);
+                                        alert(result);
+                                    }
+                                    }
+                                }); 
+                }
+                
+                function mysql_date(d){
+                    //This function should be used to change date format from dd/mm/yyyy to yyyy-mm-dd//
+                    var db_date=d.split('/');
+                    var db_date=(db_date[2]+'-'+db_date[1]+'-'+db_date[0]);
+                    return db_date;
+                }
+                 function show_modal(type)
+                {
+                    if (type == "Add_Rec") {
+                        $('#Add').modal('show');
+                    }
+                    if (type == "Updt_Rec") {
+                        $('#Updt').modal('show');
+                    }
+                    if (type == "Del_Rec") {
+                    $('#Del').modal('show');
+                    }
+                };
+function printArea(areaID) {
+    var printContent = document.getElementById(areaID).cloneNode(true);
+    var WinPrint = window.open('', '', 'width=900,height=650');
+    WinPrint.document.write(`<html><head>
+                <title>Print Application</title>
+                <style>
+                    @media print {
+                        @page {
+                            size: auto;
+                            margin: 15;
+                        }
+                        body {
+                            margin: 15;
+                            padding: 0;
+                        }
+                        img {
+                            display: block !important;
+                            visibility: visible !important;
+                        }
+                    }
+                    body {
+                        font-family: Arial, sans-serif;
+                        font-size: 12px;
+                        margin: 15;
+                        padding: 0;
+                    }
+                </style>
+            </head>
+            <body></body>
+        </html>
+    `);
+    WinPrint.document.body.appendChild(printContent);
+    WinPrint.document.close();
+    var images = WinPrint.document.images;
+    var imagesLoaded = 0;
+    function checkImagesLoaded() {
+        imagesLoaded++;
+        if (imagesLoaded === images.length) {
+            triggerPrint(); // Trigger the print dialog once all images are loaded
+        }
+    }
+
+    // Attach the load event to all images
+    for (var i = 0; i < images.length; i++) {
+        if (images[i].complete) {
+            checkImagesLoaded(); // If the image is already loaded
+        } else {
+            images[i].addEventListener('load', checkImagesLoaded);
+        }
+    }
+
+    // If no images exist, print immediately
+    if (images.length === 0) {
+        triggerPrint();
+    }
+
+    // Function to trigger the print dialog and close the window after printing
+    function triggerPrint() {
+        WinPrint.focus();     // Bring the new window into focus
+        WinPrint.print();     // Trigger the print dialog
+        WinPrint.onafterprint = function () {
+            WinPrint.close(); // Close the window after printing is done
+        };
+    }
+}
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth()+1; //January is 0!
+                var yyyy = today.getFullYear();
+                if(dd<10){ 
+                    dd='0'+ dd;
+                } 
+                if(mm<10){
+                    mm='0'+mm;
+                } 
+                var today = dd+'/'+mm+'/'+yyyy;
